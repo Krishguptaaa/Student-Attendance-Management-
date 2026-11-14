@@ -56,4 +56,7 @@ application-local.yml
 *.mv.db
 *.trace.db
 data/
+!docs/testing/data/
+docs/testing/data/*
+!docs/testing/data/seed.sql
 

@@ -23,4 +23,8 @@ jobs:
           distribution: temurin
           java-version: "17"
           cache: maven
+      - name: Load MySQL schema and seed data
+        run: |
+          mysql --host=127.0.0.1 --user=root --password=root < schema.sql
+          mysql --host=127.0.0.1 --user=root --password=root < docs/testing/data/seed.sql
       - run: mvn -B test
