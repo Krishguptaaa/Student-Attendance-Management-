@@ -54,3 +54,80 @@ UNION ALL
 SELECT 'attendance_sessions', COUNT(*), 100 FROM attendance_sessions
 UNION ALL
 SELECT 'attendance_records', COUNT(*), 300 FROM attendance_records;
+
+DROP PROCEDURE IF EXISTS assert_boundary_attendance;
+
+DELIMITER //
+CREATE PROCEDURE assert_boundary_attendance()
+BEGIN
+    DECLARE session_count BIGINT;
+    DECLARE actual_percentage DECIMAL(5, 2);
+
+    SELECT COUNT(*),
+           ROUND(
+               100.0 * SUM(CASE WHEN ar.status IN ('PRESENT', 'LATE') THEN 1 ELSE 0 END)
+               / NULLIF(COUNT(*), 0),
+               2
+           )
+    INTO session_count, actual_percentage
+    FROM users u
+    JOIN attendance_records ar ON ar.student_id = u.id
+    JOIN attendance_sessions s ON s.id = ar.session_id
+    WHERE u.roll_number = 'STU198' AND s.section_id = 12;
+
+    IF session_count <> 100 OR actual_percentage IS NULL OR actual_percentage <> 74.00 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'STU198 boundary attendance should be 74% over 100 sessions';
+    END IF;
+
+    SELECT COUNT(*),
+           ROUND(
+               100.0 * SUM(CASE WHEN ar.status IN ('PRESENT', 'LATE') THEN 1 ELSE 0 END)
+               / NULLIF(COUNT(*), 0),
+               2
+           )
+    INTO session_count, actual_percentage
+    FROM users u
+    JOIN attendance_records ar ON ar.student_id = u.id
+    JOIN attendance_sessions s ON s.id = ar.session_id
+    WHERE u.roll_number = 'STU199' AND s.section_id = 12;
+
+    IF session_count <> 100 OR actual_percentage IS NULL OR actual_percentage <> 75.00 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'STU199 boundary attendance should be 75% over 100 sessions';
+    END IF;
+
+    SELECT COUNT(*),
+           ROUND(
+               100.0 * SUM(CASE WHEN ar.status IN ('PRESENT', 'LATE') THEN 1 ELSE 0 END)
+               / NULLIF(COUNT(*), 0),
+               2
+           )
+    INTO session_count, actual_percentage
+    FROM users u
+    JOIN attendance_records ar ON ar.student_id = u.id
+    JOIN attendance_sessions s ON s.id = ar.session_id
+    WHERE u.roll_number = 'STU200' AND s.section_id = 12;
+
+    IF session_count <> 100 OR actual_percentage IS NULL OR actual_percentage <> 76.00 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'STU200 boundary attendance should be 76% over 100 sessions';
+    END IF;
+END//
+DELIMITER ;
+
+CALL assert_boundary_attendance();
+DROP PROCEDURE assert_boundary_attendance;
+
+SELECT u.roll_number,
+       COUNT(ar.id) AS sessions,
+       SUM(CASE WHEN ar.status IN ('PRESENT', 'LATE') THEN 1 ELSE 0 END) AS attended,
+       ROUND(
+           100.0 * SUM(CASE WHEN ar.status IN ('PRESENT', 'LATE') THEN 1 ELSE 0 END)
+           / COUNT(*),
+           2
+       ) AS attendance_percentage
+FROM users u
+JOIN attendance_records ar ON ar.student_id = u.id
+JOIN attendance_sessions s ON s.id = ar.session_id
+WHERE u.roll_number IN ('STU198', 'STU199', 'STU200')
+  AND s.section_id = 12
+GROUP BY u.id, u.roll_number
+ORDER BY u.roll_number;
