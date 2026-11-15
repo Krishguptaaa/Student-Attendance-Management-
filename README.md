@@ -1,5 +1,7 @@
 # Attendance Management System
 
+[![CI](https://github.com/SE-MiniProj/Student-Attendance-Management-/actions/workflows/ci.yml/badge.svg)](https://github.com/SE-MiniProj/Student-Attendance-Management-/actions/workflows/ci.yml)
+
 A Spring Boot REST API and web UI for managing students, courses and daily attendance, including per-student attendance percentages.
 
 ## Tech Stack
