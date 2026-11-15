@@ -88,6 +88,8 @@ mvn -B test
 
 Each `--password` prompts for the MySQL password. See [the seed data guide](docs/testing/data/README.md) for the fixture contents and expected rows.
 
+To run the full sequence with one command, start MySQL 8 and use `bash run_tests.sh`. The script prompts for the MySQL password interactively; set `MYSQL_PASSWORD` for non-interactive use. Optional connection settings are `MYSQL_HOST`, `MYSQL_PORT`, and `MYSQL_USER`.
+
 ### Run with MySQL (prod profile)
 
 Create the database, then provide credentials through environment variables:
