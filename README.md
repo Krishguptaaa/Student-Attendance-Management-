@@ -68,8 +68,25 @@ The UI is static files served by Spring Boot itself, so there is nothing extra t
 ### Run tests
 
 ```bash
-mvn test
+mvn -B test
 ```
+
+### Load MySQL test data and run SQL checks
+
+These fixtures require MySQL 8 and the MySQL command-line client. Run from the repository root in Bash or Git Bash. **The seed script truncates and repopulates `attendance_db`; use a disposable database only.**
+
+```bash
+mysql --host=127.0.0.1 --user=root --password < schema.sql
+mysql --host=127.0.0.1 --user=root --password < docs/testing/data/seed.sql
+
+for script in docs/testing/data/verify_*.sql; do
+  mysql --host=127.0.0.1 --user=root --password < "$script"
+done
+
+mvn -B test
+```
+
+Each `--password` prompts for the MySQL password. See [the seed data guide](docs/testing/data/README.md) for the fixture contents and expected rows.
 
 ### Run with MySQL (prod profile)
 
