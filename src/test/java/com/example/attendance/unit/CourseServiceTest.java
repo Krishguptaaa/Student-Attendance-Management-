@@ -31,6 +31,7 @@ class CourseServiceTest {
     private CourseService courseService;
 
     @Test
+    @SuppressWarnings("null")
     void createUsesRequestedCreditsAndSavesCourse() {
         CourseRequest request = new CourseRequest("CS301", "Operating Systems", "Systems course", 3);
         when(courseRepository.existsByCode("CS301")).thenReturn(false);
@@ -47,6 +48,7 @@ class CourseServiceTest {
     }
 
     @Test
+    @SuppressWarnings("null")
     void createRejectsDuplicateCourseCodeWithoutSaving() {
         CourseRequest request = new CourseRequest("CS301", "Operating Systems");
         when(courseRepository.existsByCode("CS301")).thenReturn(true);
