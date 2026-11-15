@@ -1,4 +1,4 @@
-package com.example.attendance;
+package com.example.attendance.unit;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

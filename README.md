@@ -1,11 +1,13 @@
 # Attendance Management System
 
+[![CI](https://github.com/SE-MiniProj/Student-Attendance-Management-/actions/workflows/ci.yml/badge.svg)](https://github.com/SE-MiniProj/Student-Attendance-Management-/actions/workflows/ci.yml)
+
 A Spring Boot REST API and web UI for managing students, courses and daily attendance, including per-student attendance percentages.
 
 ## Tech Stack
 
-- Java 17
-- Spring Boot 3.3 (Web, Data JPA, Validation)
+- Java 25 (LTS)
+- Spring Boot 3.5.16 (Web, Data JPA, Validation)
 - H2 in-memory database for development, MySQL for production
 - Maven
 
@@ -42,7 +44,7 @@ attendance-management-system/
 
 ### Prerequisites
 
-- JDK 17 or newer
+- JDK 25
 - Maven 3.9+
 
 ### Run locally
@@ -68,8 +70,27 @@ The UI is static files served by Spring Boot itself, so there is nothing extra t
 ### Run tests
 
 ```bash
-mvn test
+mvn -B test
 ```
+
+### Load MySQL test data and run SQL checks
+
+These fixtures require MySQL 8 and the MySQL command-line client. Run from the repository root in Bash or Git Bash. **The seed script truncates and repopulates `attendance_db`; use a disposable database only.**
+
+```bash
+mysql --host=127.0.0.1 --user=root --password < schema.sql
+mysql --host=127.0.0.1 --user=root --password < docs/testing/data/seed.sql
+
+for script in docs/testing/data/verify_*.sql; do
+  mysql --host=127.0.0.1 --user=root --password < "$script"
+done
+
+mvn -B test
+```
+
+Each `--password` prompts for the MySQL password. See [the seed data guide](docs/testing/data/README.md) for the fixture contents and expected rows.
+
+To run the full sequence with one command, start MySQL 8 and use `bash run_tests.sh`. The script prompts for the MySQL password interactively; set `MYSQL_PASSWORD` for non-interactive use. Optional connection settings are `MYSQL_HOST`, `MYSQL_PORT`, and `MYSQL_USER`.
 
 ### Run with MySQL (prod profile)
 

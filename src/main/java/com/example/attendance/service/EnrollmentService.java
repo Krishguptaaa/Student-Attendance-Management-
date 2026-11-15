@@ -22,6 +22,7 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class EnrollmentService {
@@ -40,7 +41,7 @@ public class EnrollmentService {
 
     @Transactional(readOnly = true)
     public List<EnrollmentResponse> findBySectionId(Long sectionId) {
-        if (!sectionRepository.existsById(sectionId)) {
+        if (!sectionRepository.existsById(Objects.requireNonNull(sectionId, "sectionId"))) {
             throw new ResourceNotFoundException("Section not found: " + sectionId);
         }
         return enrollmentRepository.findBySectionId(sectionId).stream()
@@ -50,14 +51,14 @@ public class EnrollmentService {
 
     @Transactional
     public EnrollmentResponse enroll(Long studentId, Long sectionId) {
-        User student = userRepository.findById(studentId)
+        User student = userRepository.findById(Objects.requireNonNull(studentId, "studentId"))
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found: " + studentId));
 
         if (student.getRole() != Role.STUDENT) {
             throw new IllegalArgumentException("User must have STUDENT role");
         }
 
-        Section section = sectionRepository.findById(sectionId)
+        Section section = sectionRepository.findById(Objects.requireNonNull(sectionId, "sectionId"))
                 .orElseThrow(() -> new ResourceNotFoundException("Section not found: " + sectionId));
 
         if (enrollmentRepository.existsByStudentIdAndSectionId(studentId, sectionId)) {
@@ -70,9 +71,9 @@ public class EnrollmentService {
 
     @Transactional
     public void removeEnrollment(Long enrollmentId) {
-        Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
+        Enrollment enrollment = enrollmentRepository.findById(Objects.requireNonNull(enrollmentId, "enrollmentId"))
                 .orElseThrow(() -> new ResourceNotFoundException("Enrollment not found: " + enrollmentId));
-        enrollmentRepository.delete(enrollment);
+        enrollmentRepository.delete(Objects.requireNonNull(enrollment));
     }
 
     @Transactional
@@ -150,7 +151,7 @@ public class EnrollmentService {
 
     @Transactional
     public void bulkRemove(List<Long> studentIds, Long sectionId) {
-        if (!sectionRepository.existsById(sectionId)) {
+        if (!sectionRepository.existsById(Objects.requireNonNull(sectionId, "sectionId"))) {
             throw new ResourceNotFoundException("Section not found: " + sectionId);
         }
 

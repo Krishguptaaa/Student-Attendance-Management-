@@ -38,7 +38,7 @@ A Spring Boot REST API backend for managing student attendance, with:
 
 | Layer | Technology |
 |---|---|
-| Framework | Spring Boot 3.2.5 |
+| Framework | Spring Boot 3.5.16 |
 | Security | Spring Security 6 + JWT (JJWT 0.12.5) |
 | Persistence | Spring Data JPA + Hibernate |
 | Database (dev) | H2 In-Memory |
@@ -46,7 +46,7 @@ A Spring Boot REST API backend for managing student attendance, with:
 | Password Hashing | BCrypt |
 | CSV Parsing | OpenCSV 5.9 |
 | Validation | Jakarta Bean Validation |
-| Java Version | Java 17+ (tested on JDK 25) |
+| Java Version | Java 25 (LTS) |
 | Build Tool | Maven 3.9+ |
 
 ---
@@ -665,7 +665,7 @@ Each row: `rollNumber,sectionId`
 ## 14. Build & Run Instructions
 
 ### Prerequisites
-- **Java 17+** (JDK 25 is installed at `C:\Program Files\Eclipse Adoptium\jdk-25.0.0.36-hotspot`)
+- **Java 25 LTS** (JDK 25 is installed at `C:\Program Files\Eclipse Adoptium\jdk-25.0.0.36-hotspot`)
 - **Maven 3.9+** (needs to be installed or use Maven Wrapper)
 
 ### Install Maven (one-time)

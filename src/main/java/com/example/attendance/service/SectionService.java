@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class SectionService {
@@ -54,24 +55,24 @@ public class SectionService {
 
     @Transactional(readOnly = true)
     public SectionResponse findById(Long id) {
-        Section section = sectionRepository.findById(id)
+        Section section = sectionRepository.findById(Objects.requireNonNull(id, "id"))
                 .orElseThrow(() -> new ResourceNotFoundException("Section not found: " + id));
         return SectionResponse.from(section);
     }
 
     @Transactional
     public SectionResponse create(SectionRequest request) {
-        Course course = courseRepository.findById(request.courseId())
+        Course course = courseRepository.findById(Objects.requireNonNull(request.courseId(), "courseId"))
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found: " + request.courseId()));
 
-        User teacher = userRepository.findById(request.teacherId())
+        User teacher = userRepository.findById(Objects.requireNonNull(request.teacherId(), "teacherId"))
                 .orElseThrow(() -> new ResourceNotFoundException("Teacher not found: " + request.teacherId()));
 
         if (teacher.getRole() != Role.TEACHER) {
             throw new IllegalArgumentException("User must have TEACHER role");
         }
 
-        Semester semester = semesterRepository.findById(request.semesterId())
+        Semester semester = semesterRepository.findById(Objects.requireNonNull(request.semesterId(), "semesterId"))
                 .orElseThrow(() -> new ResourceNotFoundException("Semester not found: " + request.semesterId()));
 
         Section section = new Section(
@@ -88,20 +89,20 @@ public class SectionService {
 
     @Transactional
     public SectionResponse update(Long id, SectionRequest request) {
-        Section section = sectionRepository.findById(id)
+        Section section = sectionRepository.findById(Objects.requireNonNull(id, "id"))
                 .orElseThrow(() -> new ResourceNotFoundException("Section not found: " + id));
 
-        Course course = courseRepository.findById(request.courseId())
+        Course course = courseRepository.findById(Objects.requireNonNull(request.courseId(), "courseId"))
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found: " + request.courseId()));
 
-        User teacher = userRepository.findById(request.teacherId())
+        User teacher = userRepository.findById(Objects.requireNonNull(request.teacherId(), "teacherId"))
                 .orElseThrow(() -> new ResourceNotFoundException("Teacher not found: " + request.teacherId()));
 
         if (teacher.getRole() != Role.TEACHER) {
             throw new IllegalArgumentException("User must have TEACHER role");
         }
 
-        Semester semester = semesterRepository.findById(request.semesterId())
+        Semester semester = semesterRepository.findById(Objects.requireNonNull(request.semesterId(), "semesterId"))
                 .orElseThrow(() -> new ResourceNotFoundException("Semester not found: " + request.semesterId()));
 
         section.setCourse(course);
@@ -116,17 +117,17 @@ public class SectionService {
 
     @Transactional
     public void delete(Long id) {
-        Section section = sectionRepository.findById(id)
+        Section section = sectionRepository.findById(Objects.requireNonNull(id, "id"))
                 .orElseThrow(() -> new ResourceNotFoundException("Section not found: " + id));
-        sectionRepository.delete(section);
+        sectionRepository.delete(Objects.requireNonNull(section));
     }
 
     @Transactional
     public SectionResponse assignFaculty(Long id, Long teacherId) {
-        Section section = sectionRepository.findById(id)
+        Section section = sectionRepository.findById(Objects.requireNonNull(id, "id"))
                 .orElseThrow(() -> new ResourceNotFoundException("Section not found: " + id));
 
-        User teacher = userRepository.findById(teacherId)
+        User teacher = userRepository.findById(Objects.requireNonNull(teacherId, "teacherId"))
                 .orElseThrow(() -> new ResourceNotFoundException("Teacher not found: " + teacherId));
 
         if (teacher.getRole() != Role.TEACHER) {

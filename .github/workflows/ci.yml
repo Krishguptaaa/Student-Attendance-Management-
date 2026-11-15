@@ -21,10 +21,27 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: "17"
+          java-version: "25"
           cache: maven
       - name: Load MySQL schema and seed data
         run: |
           mysql --host=127.0.0.1 --user=root --password=root < schema.sql
           mysql --host=127.0.0.1 --user=root --password=root < docs/testing/data/seed.sql
-      - run: mvn -B test
+      - name: Run SQL verification scripts
+        run: |
+          for script in docs/testing/data/verify_*.sql; do
+            echo "Running $script"
+            mysql --host=127.0.0.1 --user=root --password=root < "$script"
+          done
+      - name: Run Maven tests
+        run: mvn -B test
+      - name: Upload Maven test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maven-test-reports
+          path: |
+            target/surefire-reports/
+            target/failsafe-reports/
+          if-no-files-found: warn
+          retention-days: 14
