@@ -64,4 +64,5 @@ docs/testing/data/*
 !docs/testing/data/verify_student_roll.sql
 !docs/testing/data/verify_session_times.sql
 !docs/testing/data/verify_shortage_threshold.sql
+!docs/testing/data/README.md
 
