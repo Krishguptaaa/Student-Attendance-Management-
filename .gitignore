@@ -60,4 +60,5 @@ data/
 docs/testing/data/*
 !docs/testing/data/seed.sql
 !docs/testing/data/verify_seed.sql
+!docs/testing/data/verify_constraints.sql
 

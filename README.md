@@ -4,8 +4,8 @@ A Spring Boot REST API and web UI for managing students, courses and daily atten
 
 ## Tech Stack
 
-- Java 17
-- Spring Boot 3.3 (Web, Data JPA, Validation)
+- Java 25 (LTS)
+- Spring Boot 3.5.16 (Web, Data JPA, Validation)
 - H2 in-memory database for development, MySQL for production
 - Maven
 
@@ -42,7 +42,7 @@ attendance-management-system/
 
 ### Prerequisites
 
-- JDK 17 or newer
+- JDK 25
 - Maven 3.9+
 
 ### Run locally
