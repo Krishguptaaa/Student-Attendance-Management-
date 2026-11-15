@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class SemesterService {
@@ -26,7 +27,7 @@ public class SemesterService {
 
     @Transactional(readOnly = true)
     public Semester findById(Long id) {
-        return semesterRepository.findById(id)
+        return semesterRepository.findById(Objects.requireNonNull(id, "id"))
                 .orElseThrow(() -> new ResourceNotFoundException("Semester not found: " + id));
     }
 

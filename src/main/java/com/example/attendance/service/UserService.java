@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserService {
@@ -40,7 +41,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserResponse findById(Long id) {
-        return userRepository.findById(id)
+        return userRepository.findById(Objects.requireNonNull(id, "id"))
                 .map(UserResponse::from)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + id));
     }
@@ -53,7 +54,7 @@ public class UserService {
 
     @Transactional
     public UserResponse update(Long id, UpdateUserRequest request) {
-        User user = userRepository.findById(id)
+        User user = userRepository.findById(Objects.requireNonNull(id, "id"))
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + id));
 
         if (!user.getEmail().equalsIgnoreCase(request.email())
@@ -78,7 +79,7 @@ public class UserService {
 
     @Transactional
     public UserResponse activate(Long id) {
-        User user = userRepository.findById(id)
+        User user = userRepository.findById(Objects.requireNonNull(id, "id"))
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + id));
         user.setActive(true);
         return UserResponse.from(userRepository.save(user));
@@ -86,7 +87,7 @@ public class UserService {
 
     @Transactional
     public UserResponse deactivate(Long id) {
-        User user = userRepository.findById(id)
+        User user = userRepository.findById(Objects.requireNonNull(id, "id"))
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + id));
         user.setActive(false);
         return UserResponse.from(userRepository.save(user));

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class StudentService {
@@ -60,7 +61,7 @@ public class StudentService {
 
     @Transactional(readOnly = true)
     public Student findById(Long id) {
-        return studentRepository.findById(id)
+        return studentRepository.findById(Objects.requireNonNull(id, "id"))
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found: " + id));
     }
 
@@ -75,6 +76,6 @@ public class StudentService {
 
     @Transactional
     public void delete(Long id) {
-        studentRepository.delete(findById(id));
+        studentRepository.delete(Objects.requireNonNull(findById(id)));
     }
 }

@@ -92,7 +92,7 @@ public class AuthService {
     }
 
     public boolean isCurrentStudent(Long studentId, Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
+        if (studentId == null || authentication == null || !authentication.isAuthenticated()) {
             return false;
         }
 

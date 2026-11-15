@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class CourseService {
@@ -37,7 +38,7 @@ public class CourseService {
 
     @Transactional(readOnly = true)
     public Course findById(Long id) {
-        return courseRepository.findById(id)
+        return courseRepository.findById(Objects.requireNonNull(id, "id"))
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found: " + id));
     }
 
@@ -65,6 +66,6 @@ public class CourseService {
     @Transactional
     public void delete(Long id) {
         Course course = findById(id);
-        courseRepository.delete(course);
+        courseRepository.delete(Objects.requireNonNull(course));
     }
 }
